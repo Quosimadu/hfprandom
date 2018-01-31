@@ -195,12 +195,12 @@ class CsvController extends Controller {
             case 'Reservation':
                 $reference = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue() . ', ' . $this->worksheet->getCell($this->columns['nights'] . $row)->getValue() . 'n, ' . $this->worksheet->getCell($this->columns['guest'] . $row)->getValue();
                 $results[] = [
-                    'amount'    => $this->worksheet->getCell($this->columns['amount'] . $row)->getValue() - $this->worksheet->getCell($this->columns['host_fee'] . $row)->getValue() - $this->worksheet->getCell($this->columns['cleaning_fee'] . $row)->getValue(),
+                    'amount'    => $this->worksheet->getCell($this->columns['amount'] . $row)->getValue() + $this->worksheet->getCell($this->columns['host_fee'] . $row)->getValue() - $this->worksheet->getCell($this->columns['cleaning_fee'] . $row)->getValue(),
                     'account'   => $this->accountReservation,
                     'reference' => $reference,
                 ];
                 $results[] = [
-                    'amount'    => $this->worksheet->getCell($this->columns['host_fee'] . $row)->getValue(),
+                    'amount'    => -$this->worksheet->getCell($this->columns['host_fee'] . $row)->getValue(),
                     'account'   => $this->accountPortalFee,
                     'reference' => $reference,
                 ];
