@@ -24,11 +24,23 @@ class CsvController extends Controller {
         'Tiny, cozy studio in the center'  => 'K9',
         'Modern apartment @center'         => 'B7',
         'Tiny Studio+Balcony @ center'     => 'H42',
+        'Lovely studio in the heart of Prague\'s old town'     => 'V14',
+        'Large 2-Bedroom Apartment in Center Vinohrady'     => 'K10',
+        'Modern loft studio at center'     => 'N303',
+        'Modern loft in center'     => 'N403',
+        'Jubilee synagogue, walk from center'     => 'J7',
+        'Spacious 2-bedrooms @ Dancing House / center'     => 'R1',
+        'Bright apartment in Center Vinohrady'     => 'M91',
+        'Huge top floor apt. in center'     => 'N13',
+        'Spacious, Luxury Top-Floor Loft Apartment @Center'     => 'N603',
+        'Large apartment in Center Vinohrady'     => 'M92',
+        'Cozy top floor apartment in the very center'     => 'N14',
     ];
 
     public $bankAccounts = [
         '5924' => 15004,
-        '5296' => 15005,
+        '5926' => 15005,
+        '5927' => 15006,
     ];
 
     private $columns = [
