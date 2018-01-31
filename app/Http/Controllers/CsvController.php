@@ -212,19 +212,17 @@ class CsvController extends Controller {
                 break;
             case 'Payout':
                 $details = $this->worksheet->getCell($this->columns['details'] . $row)->getValue();
-                $account = '';
 
-                foreach ($this->bankAccounts as $k => $v) {
-                    preg_match('/Transfer\sto\sAccount\s\*\*\*\*\*([0-9]{4})\s\(CZK\)/', $details, $matches);
-                    if (!empty($matches)) {
-                        $account = $v;
-                        break;
-                    }
+                if (preg_match('/Transfer\sto\sAccount\s\*\*\*\*\*([0-9]{4})\s\(CZK\)/', $details, $matches) === false) {
+                   break;
+                }
+                if (empty($matches) || !isset($this->bankAccounts[$matches[1]])) {
+                    break;
                 }
 
                 $results[] = [
                     'amount'    => $this->worksheet->getCell($this->columns['paid_out'] . $row)->getValue(),
-                    'account'   => $account,
+                    'account'   => $this->bankAccounts[$matches[1]],
                     'reference' => '',
                 ];
                 break;
