@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Accounting\Address;
+use App\Models\Accounting\Invoice;
 use Carbon\Carbon;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Http\Request;
@@ -64,6 +66,8 @@ class CsvController extends Controller {
 
     private $worksheet;
 
+    private $invoicesExport;
+
     public function index()
     {
         return view('csv/form', [
@@ -76,6 +80,16 @@ class CsvController extends Controller {
         $validatedData = $request->validate([
             'csv' => 'required|file',
         ]);
+
+        $this->invoicesExport = [];
+
+        $invoicePartner = new Address();
+        $invoicePartner->name = 'AirBnB, Inc.';
+
+        $invoiceGlobalData = new Invoice();
+        $invoiceGlobalData->note = 'XML Import';
+        $invoiceGlobalData->internalNote = 'XML imported as outgoing invoice';
+
 
         $inputFileType = 'CSV';
         $inputFileName = $request->file('csv')->getRealPath();
@@ -93,6 +107,7 @@ class CsvController extends Controller {
             if ($rowNumber < 3) {
                 continue;
             }
+
 
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
