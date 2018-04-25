@@ -26,10 +26,10 @@
                     <!--adresa bez vazby na program POHODA-->
                     <int:partnerIdentity>
                         <typ:address>
-                            <typ:name>{{ $invoicePartner->name }}AirBnB itself</typ:name>
-                            <typ:city>{{ $invoicePartner->city }}</typ:city>
-                            <typ:street>{{ $invoicePartner->street }}</typ:street>
-                            <typ:zip>{{ $invoicePartner->postalCode }}</typ:zip>
+                            <typ:name>{{ $invoice->partner->name }}AirBnB itself</typ:name>
+                            <typ:city>{{ $invoice->partner->city }}</typ:city>
+                            <typ:street>{{ $invoice->partner->street }}</typ:street>
+                            <typ:zip>{{ $invoice->partner->postalCode }}</typ:zip>
                         </typ:address>
                     </int:partnerIdentity>
                     <int:centre>

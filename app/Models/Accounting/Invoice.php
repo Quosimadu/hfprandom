@@ -15,12 +15,12 @@ class Invoice
     public $documentDate;
     public $accountingDate;
     public $accountingCoding;
-    public $vatClassification;
     public $text;
     public $costCenter;
     public $note;
     public $internalNote;
     public $price;
+    public $partner;
 
     /**
      * @var array

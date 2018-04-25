@@ -19,4 +19,5 @@ class InvoicePosition
     public $priceVat;
     public $vatClassification;
     public $note;
+    public $costCenter;
 }
