@@ -14,17 +14,17 @@
                     <int:dateTax>{{ $invoice->taxDate }}2014-10-15</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}2014-10-28</int:dateAccounting>
                     <int:accounting>
-                        <typ:ids>{{ $invoice->accountingCoding }}AiRBnB</typ:ids>
+                        <typ:ids>{{ $invoice->accountingCoding }}PoplAir</typ:ids>
                     </int:accounting>
                     <int:classificationVAT>
-                        <typ:classificationVATType>{{ $invoice->vatClassification }}nonSubsume
+                        <typ:classificationVATType>none
                         </typ:classificationVATType>
                     </int:classificationVAT>
-                    <int:text>{{ $invoice->text }}HMRCH2NN5J, 3n, Olesya Dudenkova</int:text>
+                    <int:text>{{ $invoice->text }}HMRCH2NN5J, Provize AirBnB, 3n, Olesya Dudenkova</int:text>
                     <!--adresa bez vazby na program POHODA-->
                     <int:partnerIdentity>
                         <typ:address>
-                            <typ:name>{{ $invoicePartner->name }}AirBnB customer Name</typ:name>
+                            <typ:name>{{ $invoicePartner->name }}AirBnB itself</typ:name>
                             <typ:city>{{ $invoicePartner->city }}</typ:city>
                             <typ:street>{{ $invoicePartner->street }}</typ:street>
                             <typ:zip>{{ $invoicePartner->postalCode }}</typ:zip>
@@ -42,39 +42,21 @@
                     @foreach ($invoice->positions as $invoicePosition)
                         <!--textova polozka-->
                             <int:intDocItem>
-                                <int:text>{{ $invoicePosition->text }}Tržba za pronajem bytu / rent</int:text>
+                                <int:text>{{ $invoicePosition->text }}HMRCH2NN5J, Provize AirBnB, 3n, Olesya Dudenkova</int:text>
                                 <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
                                 <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
                                 <int:homeCurrency>
                                     <typ:unitPrice>{{ $invoicePosition->price }}600</typ:unitPrice>
                                     <typ:priceVAT>{{ $invoicePosition->priceVat }}0</typ:priceVAT>
                                 </int:homeCurrency>
-                                <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
+                                <int:note>{{ $invoicePosition->note }}Provize AirBnB</int:note>
                                 <int:accounting>
-                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AiRBnB</typ:ids>
+                                    <typ:ids>{{ $invoicePosition->accountingCoding }}PoplAir</typ:ids>
                                 </int:accounting>
                                 <int:centre>
                                     <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
                                 </int:centre>
                             </int:intDocItem>
-                        <!--
-                        <int:intDocItem>
-                                <int:text>{{ $invoicePosition->text }}uklid / cleaning</int:text>
-                                <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
-                                <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
-                                <int:homeCurrency>
-                                    <typ:unitPrice>{{ $invoicePosition->price }}600</typ:unitPrice>
-                                    <typ:priceVAT>{{ $invoicePosition->priceVat }}0</typ:priceVAT>
-                                </int:homeCurrency>
-                                <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
-                                <int:accounting>
-                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AirClean</typ:ids>
-                                </int:accounting>
-                                <int:centre>
-                                    <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
-                                </int:centre>
-                            </int:intDocItem>
-                            //-->
                         @endforeach
                     </int:intDocDetail>
                 @else

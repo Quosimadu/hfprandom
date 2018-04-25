@@ -20,7 +20,7 @@
                         <typ:classificationVATType>{{ $invoice->vatClassification }}nonSubsume
                         </typ:classificationVATType>
                     </int:classificationVAT>
-                    <int:text>{{ $invoice->text }}HMRCH2NN5J, 3n, Olesya Dudenkova</int:text>
+                    <int:text>{{ $invoice->text }}HMRCH2NN5J, Tržba za pronajem bytu, 3n, Olesya Dudenkova</int:text>
                     <!--adresa bez vazby na program POHODA-->
                     <int:partnerIdentity>
                         <typ:address>
@@ -42,7 +42,7 @@
                     @foreach ($invoice->positions as $invoicePosition)
                         <!--textova polozka-->
                             <int:intDocItem>
-                                <int:text>{{ $invoicePosition->text }}Tržba za pronajem bytu / rent</int:text>
+                                <int:text>{{ $invoicePosition->text }}HMRCH2NN5J, Tržba za pronajem bytu / rent</int:text>
                                 <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
                                 <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
                                 <int:homeCurrency>
@@ -57,7 +57,7 @@
                                     <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
                                 </int:centre>
                             </int:intDocItem>
-                        <!--
+                      <!--
                         <int:intDocItem>
                                 <int:text>{{ $invoicePosition->text }}uklid / cleaning</int:text>
                                 <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
