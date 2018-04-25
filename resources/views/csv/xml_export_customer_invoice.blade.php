@@ -24,10 +24,10 @@
                     <!--adresa bez vazby na program POHODA-->
                     <int:partnerIdentity>
                         <typ:address>
-                            <typ:name>{{ $invoicePartner->name }}Novák Jan</typ:name>
-                            <typ:city>{{ $invoicePartner->city }}Jihlava 1</typ:city>
-                            <typ:street>{{ $invoicePartner->street }}Luční 16</typ:street>
-                            <typ:zip>{{ $invoicePartner->postalCode }}58601</typ:zip>
+                            <typ:name>{{ $invoicePartner->name }}AirBnB customer Name</typ:name>
+                            <typ:city>{{ $invoicePartner->city }}</typ:city>
+                            <typ:street>{{ $invoicePartner->street }}</typ:street>
+                            <typ:zip>{{ $invoicePartner->postalCode }}</typ:zip>
                         </typ:address>
                     </int:partnerIdentity>
                     <int:centre>
