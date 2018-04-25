@@ -14,13 +14,13 @@
                     <int:dateTax>{{ $invoice->taxDate }}2014-10-15</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}2014-10-28</int:dateAccounting>
                     <int:accounting>
-                        <typ:ids>{{ $invoice->accountingCoding }}9Int</typ:ids>
+                        <typ:ids>{{ $invoice->accountingCoding }}AiRBnB</typ:ids>
                     </int:accounting>
                     <int:classificationVAT>
                         <typ:classificationVATType>{{ $invoice->vatClassification }}nonSubsume
                         </typ:classificationVATType>
                     </int:classificationVAT>
-                    <int:text>{{ $invoice->text }}Vyúčtování cestovních příkazů č. 26CPT003</int:text>
+                    <int:text>{{ $invoice->text }}HMRCH2NN5J, 3n, Olesya Dudenkova</int:text>
                     <!--adresa bez vazby na program POHODA-->
                     <int:partnerIdentity>
                         <typ:address>
@@ -31,7 +31,7 @@
                         </typ:address>
                     </int:partnerIdentity>
                     <int:centre>
-                        <typ:ids>{{ $invoice->costCenter }}Jihlava</typ:ids>
+                        <typ:ids>{{ $invoice->costCenter }}NP303</typ:ids>
                     </int:centre>
                     <int:note>{{ $invoiceGlobalData->note }}Načteno z XML.</int:note>
                     <int:intNote>{{ $invoiceGlobalData->internalNote }}Import Interního dokladu s položkama.
@@ -42,21 +42,39 @@
                     @foreach ($invoice->positions as $invoicePosition)
                         <!--textova polozka-->
                             <int:intDocItem>
-                                <int:text>{{ $invoicePosition->text }}Nocležné</int:text>
+                                <int:text>{{ $invoicePosition->text }}Tržba za pronajem bytu / rent</int:text>
                                 <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
                                 <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
                                 <int:homeCurrency>
                                     <typ:unitPrice>{{ $invoicePosition->price }}600</typ:unitPrice>
                                     <typ:priceVAT>{{ $invoicePosition->priceVat }}0</typ:priceVAT>
                                 </int:homeCurrency>
-                                <int:note>{{ $invoicePosition->note }}25CPT003</int:note>
+                                <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
                                 <int:accounting>
-                                    <typ:ids>{{ $invoicePosition->accountingCoding }}1Int</typ:ids>
+                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AiRBnB</typ:ids>
                                 </int:accounting>
                                 <int:centre>
-                                    <typ:ids>{{ $invoicePosition->costCenter }}Jihlava</typ:ids>
+                                    <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
                                 </int:centre>
                             </int:intDocItem>
+                        <!--
+                        <int:intDocItem>
+                                <int:text>{{ $invoicePosition->text }}uklid / cleaning</int:text>
+                                <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
+                                <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
+                                <int:homeCurrency>
+                                    <typ:unitPrice>{{ $invoicePosition->price }}600</typ:unitPrice>
+                                    <typ:priceVAT>{{ $invoicePosition->priceVat }}0</typ:priceVAT>
+                                </int:homeCurrency>
+                                <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
+                                <int:accounting>
+                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AirClean</typ:ids>
+                                </int:accounting>
+                                <int:centre>
+                                    <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
+                                </int:centre>
+                            </int:intDocItem>
+                            //-->
                         @endforeach
                     </int:intDocDetail>
                 @else
