@@ -144,7 +144,7 @@ class CsvController extends Controller {
         $invoice = new Invoice();
         $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
-        $invoice->accountingCoding = request('account');
+        $invoice->accountingCoding = $this->accountPortalFee . request('account');
         $invoice->text = $this->getInvoiceText($row);
 
         $invoicePartner = new Address();
@@ -173,7 +173,7 @@ class CsvController extends Controller {
         $invoice = new Invoice();
         $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
-        $invoice->accountingCoding = request('account');
+        $invoice->accountingCoding = $this->accountReservation . request('account');
         $invoice->text = $this->getInvoiceText($row);
 
         $invoicePartner = new Address();
@@ -283,7 +283,7 @@ class CsvController extends Controller {
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
         $position->vatClassification = 'none';
-        $position->accountingCoding = request('account');
+        $position->accountingCoding = $this->accountCleaningFee . request('account');
         $position->price = $this->getPrice($this->columns['cleaning_fee'] . $row, $splitPercent);
         $position->priceVat = '0';
         $position->note = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
