@@ -185,13 +185,13 @@ class CsvController extends Controller {
 
         if (!$listing['split']) {
             $invoice->costCenter = $listing['cost_center'];
-            $invoice->positions[] = $this->getAmountPosition($row, $listing['cost_center']);
+            $invoice->positions[] = $this->getReservationPosition($row, $listing['cost_center']);
             $invoice->positions[] = $this->getCleaningPosition($row, $listing['cost_center']);
             $this->customerInvoices[] = $invoice;
         } else {
             foreach ($listing as $costCenter => $splitPercent) {
                 $invoice->costCenter = $costCenter;
-                $invoice->positions[] = $this->getAmountPosition($row, $costCenter, $splitPercent);
+                $invoice->positions[] = $this->getReservationPosition($row, $costCenter, $splitPercent);
                 $invoice->positions[] = $this->getCleaningPosition($row, $costCenter, $splitPercent);
 
                 $this->customerInvoices[] = $invoice;
@@ -262,13 +262,13 @@ class CsvController extends Controller {
         return $position;
     }
 
-    private function getAmountPosition($row, $costCenter, $splitPercent = null)
+    private function getReservationPosition($row, $costCenter, $splitPercent = null)
     {
         $position = new InvoicePosition();
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
         $position->vatClassification = 'none';
-        $position->accountingCoding = request('account');
+        $position->accountingCoding = $this->accountReservation . request('account');
         $position->price = $this->getPrice($this->columns['amount'] . $row, $splitPercent);
         $position->priceVat = '0';
         $position->note = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
