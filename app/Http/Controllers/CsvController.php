@@ -13,7 +13,7 @@ use PHPExcel_IOFactory;
 
 class CsvController extends Controller {
 
-    public $mainAccounts = ['11000' => 'Zsofi', '11001' => 'Walter', '11002' => 'Paul'];
+    public $mainAccounts = ['1' => 'Zsofi', '2' => 'Walter', '3' => 'Paul'];
 
     public $recordTypes = ['Payout', 'Reservation', 'Resolution Adjustment'];
     public $accountUnknown = '90000';
