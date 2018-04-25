@@ -17,6 +17,10 @@ class Invoice
     /** @var  int harcode to 997 */
     public $symVar;
 
+    public $type;
+
+    public $vatClassification;
+
     /** @var  string  commitment / receivable **/
     public $invoiceType;
 
@@ -33,6 +37,5 @@ class Invoice
      * @var array
      */
     public $positions;
-
 
 }

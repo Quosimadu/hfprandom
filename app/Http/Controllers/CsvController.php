@@ -8,10 +8,13 @@ use App\Models\Accounting\InvoicePosition;
 use Carbon\Carbon;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PHPExcel;
 use PHPExcel_IOFactory;
 
 class CsvController extends Controller {
+
+    const VAT = 21;
 
     public $mainAccounts = ['1' => 'Zsofi', '2' => 'Walter', '3' => 'Paul'];
 
@@ -71,10 +74,7 @@ class CsvController extends Controller {
 
     private $worksheet;
 
-    private $invoicesExport;
-
-    private $airbnbInvoices;
-    private $customerInvoices;
+    private $invoices;
     private $modifyOutputFilename = false;
 
     public function index()
@@ -89,8 +89,6 @@ class CsvController extends Controller {
         $validatedData = $request->validate([
             'csv' => 'required|file',
         ]);
-
-        $this->invoicesExport = [];
 
         $invoiceGlobalData = new Invoice();
         $invoiceGlobalData->note = 'XML Import';
@@ -122,11 +120,10 @@ class CsvController extends Controller {
             $this->addCustomerInvoice($rowNumber);
         }
 
-        $airbnbInvoice = view('csv.xml_export_airbnb_invoice', [
-            'invoices'          => $this->airbnbInvoices,
+        $xml = view('csv.xml_invoice', [
+            'invoices'          => $this->invoices,
             'invoiceGlobalData' => $invoiceGlobalData,
         ])->render();
-        dd($airbnbInvoice);
 
         $filename = $request->file('csv')->getClientOriginalName();
         $filename = str_replace('.' . $request->file('csv')->getClientOriginalExtension(), '', $filename);
@@ -134,18 +131,22 @@ class CsvController extends Controller {
         if ($this->modifyOutputFilename) {
             $filename .= '-attention';
         }
-        $filename .= '.zip';
+        $filename .= '.xml';
 
-        return response()->download(storage_path($filename), $filename);
+        Storage::put($filename, $xml);
+
+        return response()->download(storage_path('/app/' . $filename), $filename);
     }
 
     private function addAirbnbInvoice($row)
     {
         $invoice = new Invoice();
+        $invoice->type = 'commitment';
+        $invoice->vatClassification = 'none';
         $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountPortalFee . request('account');
-        $invoice->text = $this->getInvoiceText($row);
+        $invoice->text = $this->getAirbnbInvoiceText($row);
 
         $invoicePartner = new Address();
         $invoicePartner->name = 'AirBnB, Inc.';
@@ -157,13 +158,16 @@ class CsvController extends Controller {
         if (!$listing['split']) {
             $invoice->costCenter = $listing['cost_center'];
             $invoice->positions[] = $this->getHostFeePosition($row, $listing['cost_center']);
-            $this->airbnbInvoices[] = $invoice;
+            $this->invoices[] = $invoice;
         } else {
-            foreach ($listing as $costCenter => $splitPercent) {
+            foreach ($listing['cost_center'] as $costCenter => $splitPercent) {
                 $invoice->costCenter = $costCenter;
                 $invoice->positions[] = $this->getHostFeePosition($row, $costCenter, $splitPercent);
 
-                $this->airbnbInvoices[] = $invoice;
+                $this->invoices[] = $invoice;
+
+                $invoice = clone $invoice;
+                $invoice->positions = [];
             }
         }
     }
@@ -171,6 +175,8 @@ class CsvController extends Controller {
     private function addCustomerInvoice($row)
     {
         $invoice = new Invoice();
+        $invoice->type = 'receivable';
+        $invoice->vatClassification = 'nonSubsume';
         $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountReservation . request('account');
@@ -187,14 +193,17 @@ class CsvController extends Controller {
             $invoice->costCenter = $listing['cost_center'];
             $invoice->positions[] = $this->getReservationPosition($row, $listing['cost_center']);
             $invoice->positions[] = $this->getCleaningPosition($row, $listing['cost_center']);
-            $this->customerInvoices[] = $invoice;
+            $this->invoices[] = $invoice;
         } else {
-            foreach ($listing as $costCenter => $splitPercent) {
+            foreach ($listing['cost_center'] as $costCenter => $splitPercent) {
                 $invoice->costCenter = $costCenter;
                 $invoice->positions[] = $this->getReservationPosition($row, $costCenter, $splitPercent);
                 $invoice->positions[] = $this->getCleaningPosition($row, $costCenter, $splitPercent);
 
-                $this->customerInvoices[] = $invoice;
+                $this->invoices[] = $invoice;
+
+                $invoice = clone $invoice;
+                $invoice->positions = [];
             }
         }
     }
@@ -235,11 +244,11 @@ class CsvController extends Controller {
         return $date;
     }
 
-    private function getVatValue($row)
+    private function vatIncluded($row)
     {
         $nights = $this->worksheet->getCell($this->columns['nights'] . $row)->getValue();
 
-        return $nights > 2 ? '0' : '1';
+        return $nights > 2;
     }
 
     private function getInvoiceText($row)
@@ -247,15 +256,21 @@ class CsvController extends Controller {
         return $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue() . ', ' . $this->worksheet->getCell($this->columns['nights'] . $row)->getValue() . 'n, ' . $this->worksheet->getCell($this->columns['guest'] . $row)->getValue();
     }
 
+    private function getAirbnbInvoiceText($row)
+    {
+        return $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue() . ', Provize AirBnB, ' . $this->worksheet->getCell($this->columns['nights'] . $row)->getValue() . 'n, ' . $this->worksheet->getCell($this->columns['guest'] . $row)->getValue();
+    }
+
     private function getHostFeePosition($row, $costCenter, $splitPercent = null)
     {
         $position = new InvoicePosition();
-        $position->text = $this->getInvoiceText($row);
+        $position->text = $this->getAirbnbInvoiceText($row);
         $position->quantity = 1;
         $position->vatClassification = 'none';
         $position->accountingCoding = 'PoplAir';
-        $position->price = $this->getPrice($this->columns['host_fee'] . $row, $splitPercent);
-        $position->priceVat = '0';
+        $price = $this->getPrice($this->columns['host_fee'] . $row, $splitPercent, false);
+        $position->price = $price['price'];
+        $position->priceVat = $price['vat'];
         $position->note = 'Provize AirBnB';
         $position->costCenter = $costCenter;
 
@@ -264,13 +279,15 @@ class CsvController extends Controller {
 
     private function getReservationPosition($row, $costCenter, $splitPercent = null)
     {
+        $hasVat = $this->vatIncluded($row);
         $position = new InvoicePosition();
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
-        $position->vatClassification = 'none';
+        $position->vatClassification = $hasVat ? 'nonSubsume' : 'none';
         $position->accountingCoding = $this->accountReservation . request('account');
-        $position->price = $this->getPrice($this->columns['amount'] . $row, $splitPercent);
-        $position->priceVat = '0';
+        $price = $this->getPrice($this->columns['amount'] . $row, $splitPercent, $hasVat);
+        $position->price = $price['price'];
+        $position->priceVat = $price['vat'];
         $position->note = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
         $position->costCenter = $costCenter;
 
@@ -279,27 +296,42 @@ class CsvController extends Controller {
 
     private function getCleaningPosition($row, $costCenter, $splitPercent = null)
     {
+        $hasVat = $this->vatIncluded($row);
         $position = new InvoicePosition();
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
         $position->vatClassification = 'none';
         $position->accountingCoding = $this->accountCleaningFee . request('account');
-        $position->price = $this->getPrice($this->columns['cleaning_fee'] . $row, $splitPercent);
-        $position->priceVat = '0';
+        $position->accountingCoding = $this->accountReservation . request('account');
+        $price = $this->getPrice($this->columns['cleaning_fee'] . $row, $splitPercent, $hasVat);
+        $position->price = $price['price'];
+        $position->priceVat = $price['vat'];
         $position->note = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
         $position->costCenter = $costCenter;
 
         return $position;
     }
 
-    private function getPrice($cell, $splitPercent = null)
+    private function getPrice($cell, $splitPercent = null, $exludeVat = false)
     {
-        $price = $this->worksheet->getCell($cell)->getValue();
+        $price = (float)$this->worksheet->getCell($cell)->getValue();
+
         if (!empty($splitPercent)) {
             $price = ($price * $splitPercent) / 100;
         }
 
-        return number_format($price, 2, '.', '');
+        if ($exludeVat) {
+            $priceWithoutVat = round($price / (1 + self::VAT / 100), 2);
+            $vat = $price - $priceWithoutVat;
+        } else {
+            $priceWithoutVat = $price;
+            $vat = 0;
+        }
+
+        return [
+            'price' => number_format($priceWithoutVat, 2, '.', ''),
+            'vat'   => (empty($vat) ? 0 : number_format($vat, 2, '.', '')),
+        ];
     }
 
     private function parseAmount($row)
