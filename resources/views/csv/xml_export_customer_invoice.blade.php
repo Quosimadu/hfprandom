@@ -16,7 +16,7 @@
                     <int:dateTax>{{ $invoice->taxDate }}2014-10-15</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}2014-10-28</int:dateAccounting>
                     <int:accounting>
-                        <typ:ids>{{ $invoice->accountingCoding }}AiRBnB</typ:ids>
+                        <typ:ids>{{ $invoice->accountingCoding }}</typ:ids>
                     </int:accounting>
                     <int:classificationVAT>
                         <typ:classificationVATType>{{ $invoice->vatClassification }}nonSubsume
@@ -53,7 +53,7 @@
                                 </int:homeCurrency>
                                 <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
                                 <int:accounting>
-                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AiRBnB</typ:ids>
+                                    <typ:ids>{{ $invoicePosition->accountingCoding }}</typ:ids>
                                 </int:accounting>
                                 <int:centre>
                                     <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
@@ -70,7 +70,7 @@
                                 </int:homeCurrency>
                                 <int:note>{{ $invoicePosition->note }}HMQB4XTZNZ</int:note>
                                 <int:accounting>
-                                    <typ:ids>{{ $invoicePosition->accountingCoding }}AirClean</typ:ids>
+                                    <typ:ids>{{ $invoicePosition->accountingCoding }}</typ:ids>
                                 </int:accounting>
                                 <int:centre>
                                     <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
