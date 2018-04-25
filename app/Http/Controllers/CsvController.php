@@ -38,6 +38,15 @@ class CsvController extends Controller {
         'Spacious, Luxury Top-Floor Loft Apartment @Center'     => 'N603',
         'Large apartment in Center Vinohrady'     => 'M92',
         'Cozy top floor apartment in the very center'     => 'N14',
+        '2 Huge Adjoining Apartments, up to 27 Guests' => 'Split_M91+M92'
+    ];
+
+    public $splitApartments = [
+      'M91+M92' => [
+          'M91' => 40,
+          'M92' => 60,
+      ],
+
     ];
 
     public $bankAccounts = [
