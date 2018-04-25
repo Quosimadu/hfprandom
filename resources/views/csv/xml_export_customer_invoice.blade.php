@@ -1,5 +1,5 @@
 <? xml version = "1.0" encoding = "Windows-1250"?>
-<dat:dataPack version="2.0" id="int002" ico="12345678" application="StwTest" note="Import Interních dokladů"
+<dat:dataPack version="2.0" id="int002" ico="06632637" application="StwTest" note="Import Interních dokladů"
               xmlns:dat="http://www.stormware.cz/schema/version_2/data.xsd"
               xmlns:int="http://www.stormware.cz/schema/version_2/intDoc.xsd"
               xmlns:typ="http://www.stormware.cz/schema/version_2/type.xsd">
@@ -8,8 +8,9 @@
     @foreach ($invoices as $invoice)
         <dat:dataPackItem version="2.0" id="INT001">
             <!-- interní doklad s položkami -->
-            <int:intDoc version="2.0">
-                <int:intDocHeader>
+            <int:invoice version="2.0">
+                <int:invoiceHeader>
+                    <int:invoiceType>receivable</int:invoiceType>
                     <int:date>{{ $invoice->documentDate }}2014-10-15</int:date>
                     <int:dateTax>{{ $invoice->taxDate }}2014-10-15</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}2014-10-28</int:dateAccounting>
@@ -36,12 +37,12 @@
                     <int:note>{{ $invoiceGlobalData->note }}Načteno z XML.</int:note>
                     <int:intNote>{{ $invoiceGlobalData->internalNote }}Import Interního dokladu s položkama.
                     </int:intNote>
-                </int:intDocHeader>
+                </int:invoiceHeader>
                 @if (count($invoice->positions) > 0)
-                    <int:intDocDetail>
+                    <int:invoiceDetail>
                     @foreach ($invoice->positions as $invoicePosition)
                         <!--textova polozka-->
-                            <int:intDocItem>
+                            <int:invoiceItem>
                                 <int:text>{{ $invoicePosition->text }}HMRCH2NN5J, Tržba za pronajem bytu / rent</int:text>
                                 <int:quantity>{{ $invoicePosition->quantity }}1</int:quantity>
                                 <int:rateVAT>{{ $invoicePosition->vatClassification }}none</int:rateVAT>
@@ -56,7 +57,7 @@
                                 <int:centre>
                                     <typ:ids>{{ $invoicePosition->costCenter }}NP303</typ:ids>
                                 </int:centre>
-                            </int:intDocItem>
+                            </int:invoiceItem>
                       <!--
                         <int:intDocItem>
                                 <int:text>{{ $invoicePosition->text }}uklid / cleaning</int:text>
@@ -76,16 +77,16 @@
                             </int:intDocItem>
                             //-->
                         @endforeach
-                    </int:intDocDetail>
+                    </int:invoiceDetail>
                 @else
-                    <int:intDocSummary>
+                    <int:invoiceSummary>
                         <int:homeCurrency>
                             <typ:priceNone>{{ $invoice->price }}548</typ:priceNone>
                         </int:homeCurrency>
-                    </int:intDocSummary>
+                    </int:invoiceSummary>
                 @endif
 
-            </int:intDoc>
+            </int:invoice>
         </dat:dataPackItem>
     @endforeach
 </dat:dataPack>
