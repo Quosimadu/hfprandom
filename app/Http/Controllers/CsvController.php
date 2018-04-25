@@ -17,9 +17,9 @@ class CsvController extends Controller {
 
     public $recordTypes = ['Payout', 'Reservation', 'Resolution Adjustment'];
     public $accountUnknown = '90000';
-    public $accountReservation = '25000';
-    public $accountCleaningFee = '86000';
-    public $accountPortalFee = '87000';
+    public $accountReservation = 'AiRBnB';
+    public $accountCleaningFee = 'AirClean';
+    public $accountPortalFee = 'PoplAir';
 
     public $listings = [
         'Center+balcony+walk from station'                  => 'O57',

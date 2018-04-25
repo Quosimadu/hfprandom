@@ -11,6 +11,7 @@
             <int:invoice version="2.0">
                 <int:invoiceHeader>
                     <int:invoiceType>receivable</int:invoiceType>
+                    <int:symVar>997</int:symVar>
                     <int:date>{{ $invoice->documentDate }}2014-10-15</int:date>
                     <int:dateTax>{{ $invoice->taxDate }}2014-10-15</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}2014-10-28</int:dateAccounting>

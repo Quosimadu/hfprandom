@@ -13,6 +13,13 @@ class Invoice
 {
     public $taxDate;
     public $documentDate;
+
+    /** @var  int harcode to 997 */
+    public $symVar;
+
+    /** @var  string  commitment / receivable **/
+    public $invoiceType;
+
     public $accountingDate;
     public $accountingCoding;
     public $text;
