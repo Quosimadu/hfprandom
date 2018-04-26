@@ -143,7 +143,7 @@ class CsvController extends Controller {
         $invoice = new Invoice();
         $invoice->type = 'commitment';
         $invoice->vatClassification = 'none';
-        $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
+        $invoice->documentDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountPortalFee . request('account');
         $invoice->text = $this->getAirbnbInvoiceText($row);
@@ -177,7 +177,7 @@ class CsvController extends Controller {
         $invoice = new Invoice();
         $invoice->type = 'receivable';
         $invoice->vatClassification = 'nonSubsume';
-        $invoice->documentDate = $this->getDate($this->columns['date'] . $row);
+        $invoice->documentDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountReservation . request('account');
         $invoice->text = $this->getInvoiceText($row);
