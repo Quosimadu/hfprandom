@@ -248,7 +248,7 @@ class CsvController extends Controller {
     {
         $nights = $this->worksheet->getCell($this->columns['nights'] . $row)->getValue();
 
-        return $nights > 2;
+        return $nights <= 2;
     }
 
     private function getInvoiceText($row)
@@ -302,7 +302,6 @@ class CsvController extends Controller {
         $position->quantity = 1;
         $position->vatClassification = 'none';
         $position->accountingCoding = $this->accountCleaningFee . request('account');
-        $position->accountingCoding = $this->accountReservation . request('account');
         $price = $this->getPrice($this->columns['cleaning_fee'] . $row, $splitPercent, $hasVat);
         $position->price = $price['price'];
         $position->priceVat = $price['vat'];
