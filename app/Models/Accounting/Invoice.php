@@ -38,4 +38,6 @@ class Invoice
      */
     public $positions;
 
+    public $reference;
+
 }

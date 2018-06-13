@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1250" ?>
 <dat:dataPack version="2.0" id="int002" ico="06632637" application="StwTest" note="Import Interních dokladů"
               xmlns:dat="http://www.stormware.cz/schema/version_2/data.xsd"
-              xmlns:int="http://www.stormware.cz/schema/version_2/intDoc.xsd"
+              xmlns:int="http://www.stormware.cz/schema/version_2/invoice.xsdclassificationVATType"
               xmlns:typ="http://www.stormware.cz/schema/version_2/type.xsd">
     @foreach ($invoices as $invoice)
         <dat:dataPackItem version="2.0" id="INT001">
@@ -10,6 +10,7 @@
                 <int:invoiceHeader>
                     <int:invoiceType>{{ $invoice->type }}</int:invoiceType>
                     <int:symVar>997</int:symVar>
+                    <int:originalDocument>{{ $invoice->reference }}</int:originalDocument>
                     <int:date>{{ $invoice->documentDate }}</int:date>
                     <int:dateTax>{{ $invoice->taxDate }}</int:dateTax>
                     <int:dateAccounting>{{ $invoice->accountingDate }}</int:dateAccounting>
@@ -17,8 +18,8 @@
                         <typ:ids>{{ $invoice->accountingCoding }}</typ:ids>
                     </int:accounting>
                     <int:classificationVAT>
-                        <typ:classificationVATType>{{ $invoice->vatClassification }}
-                        </typ:classificationVATType>
+                        <typ:ids>PN</typ:ids>
+                        <typ:classificationVATType>{{ $invoice->vatClassification }}</typ:classificationVATType>
                     </int:classificationVAT>
                     <int:text>{{ $invoice->text }}</int:text>
                     <int:partnerIdentity>

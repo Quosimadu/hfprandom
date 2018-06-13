@@ -142,11 +142,12 @@ class CsvController extends Controller {
     {
         $invoice = new Invoice();
         $invoice->type = 'commitment';
-        $invoice->vatClassification = 'none';
+        $invoice->vatClassification = 'inland';
         $invoice->documentDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountPortalFee . request('account');
         $invoice->text = $this->getAirbnbInvoiceText($row);
+        $invoice->reference = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
 
         $invoicePartner = new Address();
         $invoicePartner->name = 'AirBnB, Inc.';
@@ -181,6 +182,7 @@ class CsvController extends Controller {
         $invoice->taxDate = $invoice->accountingDate = $this->getDate($this->columns['start_date'] . $row);
         $invoice->accountingCoding = $this->accountReservation . request('account');
         $invoice->text = $this->getInvoiceText($row);
+        $invoice->reference = $this->worksheet->getCell($this->columns['confirmation_code'] . $row)->getValue();
 
         $invoicePartner = new Address();
         $invoicePartner->name = $this->worksheet->getCell($this->columns['guest'] . $row)->getValue();
@@ -266,7 +268,7 @@ class CsvController extends Controller {
         $position = new InvoicePosition();
         $position->text = $this->getAirbnbInvoiceText($row);
         $position->quantity = 1;
-        $position->vatClassification = 'none';
+        $position->vatClassification = 'inland';
         $position->accountingCoding = 'PoplAir';
         $price = $this->getPrice($this->columns['host_fee'] . $row, $splitPercent, false);
         $position->price = $price['price'];
@@ -283,7 +285,7 @@ class CsvController extends Controller {
         $position = new InvoicePosition();
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
-        $position->vatClassification = $hasVat ? 'nonSubsume' : 'none';
+        $position->vatClassification = $hasVat ? 'nonSubsume' : 'inland';
         $position->accountingCoding = $this->accountReservation . request('account');
         $price = $this->getPrice($this->columns['amount'] . $row, $splitPercent, $hasVat);
         $position->price = $price['price'];
@@ -300,7 +302,7 @@ class CsvController extends Controller {
         $position = new InvoicePosition();
         $position->text = $this->getInvoiceText($row);
         $position->quantity = 1;
-        $position->vatClassification = 'none';
+        $position->vatClassification = 'inland';
         $position->accountingCoding = $this->accountCleaningFee . request('account');
         $price = $this->getPrice($this->columns['cleaning_fee'] . $row, $splitPercent, $hasVat);
         $position->price = $price['price'];
